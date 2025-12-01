@@ -9,8 +9,8 @@
 :root {
   --yellow: #efc73c; /* PRIMARY */
   --red: #c63d28;
-  --dark: #1b1b1b;
-  --gray: #363636; /* THIRD */
+  --dark: #151515;
+  --gray-dark: #1c1c1b;
 
   /* -------------------------------------------------------
      🌞 LIGHT MODE
@@ -18,7 +18,7 @@
   --background: #fdfdfb;
   --foreground: var(--dark);
   --magic-dark: var(--dark);
-
+  --magic-light: var(--gray-dark);
   --radius: 0.625rem;
 
   --card: #ffffff;
@@ -132,7 +132,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-magic-dark: var(--magic-dark);
-  --color-gray: var(--gray);
+  --color-magic-light: var(--magic-light);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
 

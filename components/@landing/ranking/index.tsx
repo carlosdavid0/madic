@@ -61,7 +61,7 @@ export function Ranking() {
             <TabsTrigger
               value="ranking-geral"
               className={cn(
-                buttonVariants({ variant: "gray" }),
+                buttonVariants({ variant: "dark" }),
                 "h-16 w-full text-xl rounded-none! transition-all",
                 "data-[state=active]:opacity-100 data-[state=active]:shadow-lg data-[state=active]:scale-[1.02] data-[state=active]:z-10",
                 "data-[state=active]:bg-gray! data-[state=active]:text-white!",
@@ -120,7 +120,7 @@ export function Ranking() {
         </article>
         <article className="flex-1 w-full sm:w-auto max-w-md space-y-4">
           <Button
-            variant={"gray"}
+            variant={"dark"}
             className="h-16 sm:h-20 w-full text-xl sm:text-2xl lg:text-3xl rounded-none!"
           >
             Ranking geral
