@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { ArtitisCard } from "@/components/artitis-card";
 import {
   Carousel,
   CarouselContent,
@@ -103,40 +103,7 @@ export function Destaques() {
             <CarouselPrevious className="hidden lg:flex" />
             <CarouselNext className="hidden lg:flex" />
           </Carousel>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
-            <div className="flex items-center gap-4 flex-1">
-              <img
-                src={destaque.artist.avatar}
-                alt={destaque.artist.name}
-                className="w-16 h-16 rounded-full object-cover shrink-0"
-              />
-              <div className="flex flex-col">
-                <h3 className="text-primary font-bold text-lg">
-                  {destaque.artist.name}
-                </h3>
-                <p className="text-white text-sm">
-                  {destaque.artist.professions.join(", ")}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 sm:gap-4">
-              <span className="text-white text-sm whitespace-nowrap">
-                Ranking Geral:
-              </span>
-              <span className="text-primary font-bold text-xl">
-                {destaque.artist.rankingPosition}°
-              </span>
-            </div>
-
-            <Button
-              variant="secondary"
-              size="default"
-              className="w-full sm:w-auto"
-            >
-              Ir para o perfil
-            </Button>
-          </div>
+          <ArtitisCard name={destaque.artist.name} avatar={destaque.artist.avatar} professions={destaque.artist.professions} rankingPosition={destaque.artist.rankingPosition} />
         </div>
       </article>
     </section>
