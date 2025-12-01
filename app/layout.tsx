@@ -100,7 +100,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={`antialiased ${visbyFont.variable}`}>
+      <body className={`antialiased ${visbyFont.variable} bg-magic`}>
         {children}
       </body>
     </html>
