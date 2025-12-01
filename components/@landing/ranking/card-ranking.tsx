@@ -27,7 +27,7 @@ export function CardRanking({ type, who, position, score }: CardRankingProps) {
   return (
     <article
       className={cn(
-        "w-full h-16 border-2 rounded-t-xl flex items-center px-4 relative overflow-hidden",
+        "w-full h-16 border-2 rounded-t-xl flex items-center px-4 relative overflow-hidden hover:bg-muted-foreground/10 transition-all duration-300",
         getColors(type)
       )}
       style={{
