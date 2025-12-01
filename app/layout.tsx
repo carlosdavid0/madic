@@ -1,15 +1,91 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const visbyFont = localFont({
+  src: [
+    {
+      path: "../public/VISBYCF-THIN.otf",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "../public/VISBYCF-THINOBLIQUE.otf",
+      weight: "100",
+      style: "italic",
+    },
+    {
+      path: "../public/VISBYCF-LIGHT.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../public/VISBYCF-LIGHTOBLIQUE.otf",
+      weight: "300",
+      style: "italic",
+    },
+    {
+      path: "../public/VISBYCF-REGULAR.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/VISBYCF-REGULAROBLIQUE.otf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../public/VISBYCF-MEDIUM.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/VISBYCF-MEDIUMOBLIQUE.otf",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "../public/VISBYCF-DEMIBOLD.otf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../public/VISBYCF-DEMIBOLDOBLIQUE.otf",
+      weight: "600",
+      style: "italic",
+    },
+    {
+      path: "../public/VISBYCF-BOLD.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/VISBYCF-BOLDOBLIQUE.otf",
+      weight: "700",
+      style: "italic",
+    },
+    {
+      path: "../public/VISBYCF-EXTRABOLD.otf",
+      weight: "800",
+      style: "normal",
+    },
+    {
+      path: "../public/VISBYCF-EXTRABOLDOBLIQUE.otf",
+      weight: "800",
+      style: "italic",
+    },
+    {
+      path: "../public/VISBYCF-HEAVY.otf",
+      weight: "900",
+      style: "normal",
+    },
+    {
+      path: "../public/VISBYCF-HEAVYOBLIQUE.otf",
+      weight: "900",
+      style: "italic",
+    },
+  ],
+  variable: "--font-visby",
 });
 
 export const metadata: Metadata = {
@@ -23,10 +99,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="pt-br">
+      <body className={`antialiased ${visbyFont.variable}`}>
         {children}
       </body>
     </html>
