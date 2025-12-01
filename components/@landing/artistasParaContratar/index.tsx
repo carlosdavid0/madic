@@ -16,7 +16,7 @@ export function ArtistasParaContratar() {
             </li>
           ))}
         </ol>
-        <Button variant="default" size="default" className="w-fit mx-auto mt-8">
+        <Button variant="default" size="default" className="w-full lg:w-fit mx-auto mt-8">
           Ver todos
         </Button>
       </article>
