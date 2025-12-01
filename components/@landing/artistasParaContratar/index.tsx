@@ -1,4 +1,5 @@
 import { ArtitisCard } from "@/components/artitis-card";
+import { Button } from "@/components/ui/button";
 
 export function ArtistasParaContratar() {
   return (
@@ -15,6 +16,9 @@ export function ArtistasParaContratar() {
             </li>
           ))}
         </ol>
+        <Button variant="default" size="default" className="w-fit mx-auto mt-8">
+          Ver todos
+        </Button>
       </article>
     </section>
   );
