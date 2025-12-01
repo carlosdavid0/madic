@@ -6,7 +6,7 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
+  --color-background: var(--magic-background);
   --color-foreground: var(--foreground);
   --font-visby: var(--font-visby);
 }
@@ -19,7 +19,6 @@
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-normal-visby), ui-sans-serif, system-ui, sans-serif;
 }
@@ -27,7 +26,7 @@ body {
 @layer utilities {
   .bg-magic {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     background: #000000;
     background-image: radial-gradient(
         circle at center,
@@ -50,5 +49,6 @@ body {
         transparent 70%
       );
     background-blend-mode: screen;
+    background-attachment: fixed;
   }
 }
