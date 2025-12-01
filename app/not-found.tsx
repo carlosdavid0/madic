@@ -1,4 +1,4 @@
-import { PublicWrapper } from '@/src/components/public-wrapper';
+import { PublicWrapper } from '@/components/public-wrapper';
 import Link from 'next/link';
 
 export default function NotFound() {
