@@ -1,4 +1,5 @@
 "use client";
+import { ArtistasParaContratar } from "@/components/@landing/artistasParaContratar";
 import { Desafios } from "@/components/@landing/desafios";
 import { Destaques } from "@/components/@landing/destaques";
 import { ContentHeron } from "@/components/@landing/hero";
@@ -18,6 +19,9 @@ export default function PublicPage() {
       </section>
       <section className="bg-magic-light w-full">
         <Desafios />
+      </section>
+      <section className="bg-magic-dark w-full">
+        <ArtistasParaContratar />
       </section>
     </section>
   );
