@@ -16,7 +16,7 @@ const typeColor = {
   gold: "border-yellow-500",
   silver: "border-gray-400",
   bronze: "border-orange-700",
-  participant: "border-muted-foreground",
+  participant: "border-muted-foreground/20",
 }
 
 export function getColors(type: cardType) {
