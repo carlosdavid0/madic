@@ -10,12 +10,14 @@
   --yellow: #efc73c; /* PRIMARY */
   --red: #c63d28;
   --dark: #1b1b1b;
+  --gray: #363636; /* THIRD */
 
   /* -------------------------------------------------------
      🌞 LIGHT MODE
   ------------------------------------------------------- */
   --background: #fdfdfb;
   --foreground: var(--dark);
+  --magic-dark: var(--dark);
 
   --radius: 0.625rem;
 
@@ -129,7 +131,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
+  --color-magic-dark: var(--magic-dark);
+  --color-gray: var(--gray);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
 

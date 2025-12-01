@@ -7,7 +7,7 @@ export default function PublicPage() {
    <section>
     <ContentHeron />
 
-    <section className="bg-black">
+    <section className="bg-magic-dark">
       <Ranking />
     </section>
    </section>

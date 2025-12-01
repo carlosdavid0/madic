@@ -22,7 +22,7 @@ export function User() {
         <div className="h-[35px] w-[35px] rounded-full bg-zinc-700/50 animate-pulse" />
 
         {/* Name skeleton */}
-        <div className="h-[14px] w-[80px] rounded-md bg-zinc-700/50 animate-pulse" />
+        <div className="h-[14px] w-[80px] rounded-md bg-zinc-700/50 animate-pulse hidden lg:block" />
       </div>
     );
   }
@@ -36,7 +36,7 @@ export function User() {
         height={35}
         className="rounded-full"
       />
-      <span className="text-md font-normal">Carlos David</span>
+      <span className="text-md font-normal hidden lg:block">Carlos David</span>
     </div>
   );
 }

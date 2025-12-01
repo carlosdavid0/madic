@@ -16,7 +16,7 @@ export function Nav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center">
+    <nav className="lg:flex hidden items-center">
       <ul className="flex gap-8 items-center">
         {navItems.map((item) => {
           const active = pathname === item.href;
