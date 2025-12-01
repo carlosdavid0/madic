@@ -48,8 +48,8 @@ export function Destaques() {
         ))}
       </CarouselContent>
 
-      <CarouselPrevious className="" />
-      <CarouselNext className="" />
+      <CarouselPrevious className="hidden lg:flex" />
+      <CarouselNext className="hidden lg:flex" />
 
     </Carousel>
   );
