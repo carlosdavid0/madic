@@ -51,6 +51,8 @@ export function Ranking() {
                 buttonVariants({ variant: "secondary" }),
                 "h-16 w-full text-xl rounded-none! transition-all",
                 "data-[state=active]:opacity-100 data-[state=active]:shadow-lg data-[state=active]:scale-[1.02] data-[state=active]:z-10",
+                "data-[state=active]:bg-secondary! data-[state=active]:text-secondary-foreground!",
+                "dark:data-[state=active]:bg-secondary! dark:data-[state=active]:text-secondary-foreground!",
                 "data-[state=inactive]:opacity-50 data-[state=inactive]:hover:opacity-70"
               )}
             >
@@ -62,6 +64,8 @@ export function Ranking() {
                 buttonVariants({ variant: "gray" }),
                 "h-16 w-full text-xl rounded-none! transition-all",
                 "data-[state=active]:opacity-100 data-[state=active]:shadow-lg data-[state=active]:scale-[1.02] data-[state=active]:z-10",
+                "data-[state=active]:bg-gray! data-[state=active]:text-white!",
+                "dark:data-[state=active]:bg-gray! dark:data-[state=active]:text-white!",
                 "data-[state=inactive]:opacity-50 data-[state=inactive]:hover:opacity-70"
               )}
             >
