@@ -4,12 +4,12 @@ import { Ranking } from "@/components/@landing/ranking";
 
 export default function PublicPage() {
   return (
-   <section>
-    <ContentHeron />
+    <section className="w-full overflow-x-hidden">
+      <ContentHeron />
 
-    <section className="bg-magic-dark">
-      <Ranking />
+      <section className="bg-magic-dark w-full">
+        <Ranking />
+      </section>
     </section>
-   </section>
   );
 }
