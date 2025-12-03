@@ -7,9 +7,9 @@ import { loginAction } from '@/lib/actions/auth';
 import { useAuth } from '@/lib/contexts/auth-context';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRouter, useSearchParams } from 'next/navigation';
 import z from 'zod';
 
 const schema = z.object({
@@ -45,6 +45,8 @@ export function LoginForm() {
         await refreshUser();
         // Disparar evento para sincronizar entre abas
         window.dispatchEvent(new Event('auth-change'));
+        
+        // O AppGuard vai cuidar do redirecionamento para completar perfil se necessário
         // Redirecionar após login bem-sucedido
         router.push(redirect);
         router.refresh();

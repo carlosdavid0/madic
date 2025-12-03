@@ -1,10 +1,15 @@
+import { cookies } from 'next/headers';
+import { verifyToken } from './jwt';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { cookies } from 'next/headers';
-import { verifyToken } from './jwt';
 
-export async function getCurrentUser() {
+/**
+ * Verifica se o usuário atual tem perfil completo
+ * Retorna true se o perfil está completo, false caso contrário
+ * Retorna null se não há usuário autenticado
+ */
+export async function checkProfileCompleted(): Promise<boolean | null> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
@@ -21,20 +26,8 @@ export async function getCurrentUser() {
 
     const [user] = await db
       .select({
-        id: users.id,
-        name: users.name,
-        username: users.username,
-        email: users.email,
-        avatar: users.avatar,
-        socialName: users.socialName,
-        bio: users.bio,
-        age: users.age,
-        locate: users.locate,
-        availableFreelancer: users.availableFreelancer,
-        active: users.active,
         profileCompleted: users.profileCompleted,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
+        active: users.active,
       })
       .from(users)
       .where(eq(users.id, payload.sub))
@@ -44,7 +37,7 @@ export async function getCurrentUser() {
       return null;
     }
 
-    return user;
+    return user.profileCompleted ?? false;
   } catch {
     return null;
   }

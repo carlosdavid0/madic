@@ -1,4 +1,3 @@
-"use client";
 import { Apoiadores } from "@/components/@landing/apoiadores";
 import { ArtistasParaContratar } from "@/components/@landing/artistasParaContratar";
 import { Desafios } from "@/components/@landing/desafios";

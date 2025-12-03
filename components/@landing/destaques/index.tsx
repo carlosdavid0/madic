@@ -1,3 +1,5 @@
+"use client";
+
 import { ArtitisCard } from "@/components/artitis-card";
 import {
   Carousel,

@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { ProfileModal } from '@/components/auth/profile-modal';
 
 type User = {
   id: string;
@@ -14,6 +15,7 @@ type User = {
   locate: string | null;
   availableFreelancer: boolean;
   active: boolean;
+  profileCompleted: boolean;
   createdAt: string | null;
   updatedAt: string | null;
 };
@@ -75,6 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext.Provider value={{ user, loading, refreshUser }}>
       {children}
+      <ProfileModal />
     </AuthContext.Provider>
   );
 }

@@ -1,14 +1,14 @@
+import { verifyToken } from './jwt';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { cookies } from 'next/headers';
-import { verifyToken } from './jwt';
 
-export async function getCurrentUser() {
+/**
+ * Busca o usuário atual no middleware
+ * Esta função é otimizada para uso no middleware (Edge Runtime)
+ */
+export async function getCurrentUserFromToken(token: string) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
     if (!token) {
       return null;
     }
@@ -22,19 +22,8 @@ export async function getCurrentUser() {
     const [user] = await db
       .select({
         id: users.id,
-        name: users.name,
-        username: users.username,
-        email: users.email,
-        avatar: users.avatar,
-        socialName: users.socialName,
-        bio: users.bio,
-        age: users.age,
-        locate: users.locate,
-        availableFreelancer: users.availableFreelancer,
         active: users.active,
         profileCompleted: users.profileCompleted,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
       })
       .from(users)
       .where(eq(users.id, payload.sub))
