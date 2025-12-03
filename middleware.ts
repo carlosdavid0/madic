@@ -32,23 +32,30 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Se tem token e está tentando acessar rota pública (login/register)
-  if (token && isPublicRoute) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  // Se tem token, verificar se é válido apenas para rotas protegidas
-  if (token && isProtectedRoute) {
+  // Se tem token, verificar se é válido
+  if (token) {
     const user = await getCurrentUserFromToken(token);
 
     // Se o token existe mas o usuário é null, o token é inválido/expirado
     if (!user) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      const response = NextResponse.redirect(loginUrl);
       // Limpar cookie inválido
+      if (isProtectedRoute) {
+        const loginUrl = new URL('/login', request.url);
+        loginUrl.searchParams.set('redirect', pathname);
+        const response = NextResponse.redirect(loginUrl);
+        response.cookies.delete('token');
+        return response;
+      }
+      
+      // Para outras rotas, apenas limpar o cookie e continuar
+      const response = NextResponse.next();
       response.cookies.delete('token');
       return response;
+    }
+
+    // Se tem token válido e está tentando acessar rota pública (login/register)
+    if (isPublicRoute) {
+      return NextResponse.redirect(new URL('/', request.url));
     }
   }
 
