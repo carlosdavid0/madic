@@ -40,13 +40,8 @@ export function ProfileObserver() {
     }
 
     // Se perfil está completo e está na página de completar perfil, redirecionar para home
-    // Verificar se o status mudou de false para true (perfil foi completado)
-    if (
-      currentProfileStatus &&
-      pathname === '/complete-profile' &&
-      lastProfileStatus.current === false
-    ) {
-      router.push('/');
+    if (currentProfileStatus && pathname === '/complete-profile') {
+      router.replace('/');
       return;
     }
 

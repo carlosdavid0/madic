@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { db } from '@/lib/db';
 import { skills, socialMedias, tools, users, userSocial, userTools } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
@@ -59,6 +60,34 @@ async function getUserByUsername(username: string) {
   }
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
+  const { username } = await params;
+  const user = await getUserByUsername(username);
+  if (!user) {
+    return {
+      title: 'Perfil não encontrado',
+      description: 'Perfil não encontrado no Madic',
+      openGraph: {
+        title: 'Perfil não encontrado',
+        description: 'Perfil não encontrado no Madic',
+        images: [],
+      },
+    };
+  }
+  return {
+    title: `Perfil de ${user.name}`,
+    description: `Perfil de ${user.name} no Madic`,
+    openGraph: {
+      title: `Perfil de ${user.name}`,
+      description: `Perfil de ${user.name} no Madic`,
+      images: [user.avatar || ''],
+      url: `https://madic.com/profile/${user.username}`,
+      type: 'website',
+      siteName: 'Madic',
+      locale: 'pt-BR',
+    },
+  };
+}
 function calculateAge(birthDate: string | null): number | null {
   if (!birthDate) return null;
   const today = new Date();

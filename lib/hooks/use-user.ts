@@ -46,6 +46,7 @@ export function useRefreshUser() {
 
   return async () => {
     await queryClient.invalidateQueries({ queryKey: ['user'] });
+    await queryClient.refetchQueries({ queryKey: ['user'] });
   };
 }
 

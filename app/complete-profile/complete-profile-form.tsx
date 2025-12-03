@@ -79,10 +79,9 @@ export function CompleteProfileForm({ user }: CompleteProfileFormProps) {
         await refreshUser();
         window.dispatchEvent(new Event('auth-change'));
         // Aguardar um pouco para garantir que o contexto foi atualizado
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 300));
         // Redirecionar após completar perfil
-        router.push('/');
-        router.refresh();
+        router.replace('/');
       } else {
         setError(result?.error || 'Erro ao atualizar perfil');
         setIsLoading(false);

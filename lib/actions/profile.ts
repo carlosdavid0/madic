@@ -87,6 +87,7 @@ export async function updateProfileAction(formData: FormData): Promise<UpdatePro
     }
 
     revalidatePath('/');
+    revalidatePath('/complete-profile');
     return {
       success: true,
     };

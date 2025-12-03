@@ -20,8 +20,8 @@ export function ProfileModal() {
   // e não está na página de completar perfil
   const shouldShowModal = Boolean(
     !loading &&
-      user &&
-      !user.profileCompleted &&
+    user &&
+    !user.profileCompleted &&
       pathname !== '/complete-profile'
   );
 

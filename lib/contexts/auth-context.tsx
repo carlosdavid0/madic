@@ -17,7 +17,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshUserQuery = useRefreshUser();
 
   const refreshUser = useCallback(async () => {
-    refreshUserQuery();
+    await refreshUserQuery();
   }, [refreshUserQuery]);
 
   useEffect(() => {
