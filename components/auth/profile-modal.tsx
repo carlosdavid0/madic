@@ -18,18 +18,19 @@ export function ProfileModal() {
 
   // Mostrar modal apenas se usuário está autenticado, perfil não está completo
   // e não está na página de completar perfil
-  const shouldShowModal =
+  const shouldShowModal = Boolean(
     !loading &&
-    user &&
-    !user.profileCompleted &&
-    pathname !== '/complete-profile';
+      user &&
+      !user.profileCompleted &&
+      pathname !== '/complete-profile'
+  );
 
   const handleCompleteProfile = () => {
     router.push('/complete-profile');
   };
 
   return (
-    <Dialog open={shouldShowModal} modal={true}>
+    <Dialog open={shouldShowModal}>
       <DialogContent
         className="sm:max-w-[425px]"
         onCloseAutoFocus={(e) => e.preventDefault()}
