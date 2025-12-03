@@ -3,10 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { loginAction } from '@/lib/actions/auth';
+import { useAuth } from '@/lib/contexts/auth-context';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouter, useSearchParams } from 'next/navigation';
 import z from 'zod';
 
 const schema = z.object({
@@ -17,6 +20,10 @@ const schema = z.object({
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect') || '/';
+  const { refreshUser } = useAuth();
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
@@ -31,25 +38,22 @@ export function LoginForm() {
       formData.append('email', data.email);
       formData.append('password', data.password);
 
-      // const result = await loginAction(formData);
+      const result = await loginAction(formData);
 
-      // if (result?.success && result.token) {
-      //   // Definir cookie no cliente se não foi definido no servidor
-      //   setCookieClient('token', result.token, {
-      //     maxAge: 60 * 60 * 24 * 7, // 7 days
-      //     secure: process.env.NODE_ENV === 'production',
-      //     sameSite: 'lax',
-      //     path: '/',
-      //   });
-
-      //   // Redirecionar imediatamente sem delay
-      //   // Não definir setIsLoading(false) aqui para manter o loading até o redirect
-      //   window.location.replace('/dashboard');
-      // } else {
-      //   // setLoginError(result?.error || 'Email ou senha inválidos');
-      //   setIsLoading(false);
-      // }
-    } catch {
+      if (result?.success) {
+        // Atualizar o contexto de autenticação
+        await refreshUser();
+        // Disparar evento para sincronizar entre abas
+        window.dispatchEvent(new Event('auth-change'));
+        // Redirecionar após login bem-sucedido
+        router.push(redirect);
+        router.refresh();
+      } else {
+        setLoginError(result?.error || 'Email ou senha inválidos');
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error('Erro no login:', error);
       setLoginError('Erro interno. Tente novamente.');
       setIsLoading(false);
     }

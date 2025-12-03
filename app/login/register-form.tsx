@@ -3,10 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { registerAction } from '@/lib/actions/auth';
+import { useAuth } from '@/lib/contexts/auth-context';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import z from 'zod';
 
 const registerSchema = z
@@ -25,6 +28,8 @@ export function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [registerError, setRegisterError] = useState<string | null>(null);
   const [registerSuccess, setRegisterSuccess] = useState(false);
+  const router = useRouter();
+  const { refreshUser } = useAuth();
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(registerSchema),
@@ -40,25 +45,23 @@ export function RegisterForm() {
       formData.append('email', data.email);
       formData.append('password', data.password);
 
-      // const result = await registerAction(formData);
+      const result = await registerAction(formData);
 
-      // if (result?.success) {
-      //   setRegisterSuccess(true);
-      //   // Redirecionar após registro bem-sucedido
-      //   setTimeout(() => {
-      //     window.location.replace('/login');
-      //   }, 2000);
-      // } else {
-      //   setRegisterError(result?.error || 'Erro ao criar conta. Tente novamente.');
-      //   setIsLoading(false);
-      // }
-
-      // Simulação temporária
-      setTimeout(() => {
+      if (result?.success) {
+        // Atualizar o contexto de autenticação
+        await refreshUser();
         setRegisterSuccess(true);
+        // Redirecionar após registro bem-sucedido
+        setTimeout(() => {
+          router.push('/');
+          router.refresh();
+        }, 2000);
+      } else {
+        setRegisterError(result?.error || 'Erro ao criar conta. Tente novamente.');
         setIsLoading(false);
-      }, 1500);
-    } catch {
+      }
+    } catch (error) {
+      console.error('Erro no registro:', error);
       setRegisterError('Erro interno. Tente novamente.');
       setIsLoading(false);
     }
