@@ -19,7 +19,7 @@ export function ProfileObserver() {
     if (loading) return;
 
     // Rotas públicas que não precisam de verificação
-    const publicRoutes = ['/login', '/register', '/api'];
+    const publicRoutes = ['/login', '/register', '/api', '/perfil'];
     const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
 
     // Se está em rota pública, não fazer nada

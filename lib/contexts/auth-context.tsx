@@ -1,24 +1,8 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useCallback } from 'react';
 import { ProfileModal } from '@/components/auth/profile-modal';
-
-type User = {
-  id: string;
-  name: string;
-  username: string | null;
-  email: string;
-  avatar: string | null;
-  socialName: string | null;
-  bio: string | null;
-  age: string | null;
-  locate: string | null;
-  availableFreelancer: boolean;
-  active: boolean;
-  profileCompleted: boolean;
-  createdAt: string | null;
-  updatedAt: string | null;
-};
+import { useUser, useRefreshUser, type User } from '@/lib/hooks/use-user';
 
 interface AuthContextType {
   user: User | null;
@@ -29,34 +13,14 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: user, isLoading: loading } = useUser();
+  const refreshUserQuery = useRefreshUser();
 
   const refreshUser = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/auth/me', {
-        credentials: 'include',
-        cache: 'no-store',
-      });
-
-      if (response.ok) {
-        const currentUser = await response.json();
-        setUser(currentUser);
-      } else {
-        setUser(null);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar usuário:', error);
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    refreshUserQuery();
+  }, [refreshUserQuery]);
 
   useEffect(() => {
-    refreshUser();
-
     // Listener para sincronizar entre abas quando o login/logout acontece
     const handleStorageChange = () => {
       refreshUser();
@@ -75,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [refreshUser]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, refreshUser }}>
+    <AuthContext.Provider value={{ user: user || null, loading, refreshUser }}>
       {children}
       <ProfileModal />
     </AuthContext.Provider>

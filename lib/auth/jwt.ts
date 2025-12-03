@@ -16,9 +16,13 @@ export function generateToken(userId: string): string {
 
 export function verifyToken(token: string): TokenPayload | null {
   try {
+    console.log('[verifyToken] Token:', token);
+    console.log('[verifyToken] JWT_SECRET:', JWT_SECRET);
     const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
+    console.log('[verifyToken] Decoded:', decoded);
     return decoded;
-  } catch {
+  } catch (error) {
+    console.error('[verifyToken] Error:', error);
     return null;
   }
 }

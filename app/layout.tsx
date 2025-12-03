@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { AuthProvider } from "@/lib/contexts/auth-context";
+import { QueryProvider } from "@/lib/providers/query-provider";
 
 const visbyFont = localFont({
   src: [
@@ -102,7 +103,9 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={`antialiased ${visbyFont.variable} bg-magic select-none`}>
-        <AuthProvider>{children}</AuthProvider>
+        <QueryProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );
