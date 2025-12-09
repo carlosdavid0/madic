@@ -27,6 +27,7 @@ export const users = pgTable('users', {
   availableFreelancer: boolean('available_freelancer').default(false),
   active: boolean('active').default(true),
   profileCompleted: boolean('profile_completed').default(false),
+  role: varchar('role', { length: 50 }).default('user').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });

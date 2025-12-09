@@ -1,23 +1,13 @@
-import { redirect } from 'next/navigation';
-import { getCurrentUser } from '@/lib/auth/get-user';
-
-export default async function CompleteProfileLayout({
+/**
+ * Layout para página de completar perfil
+ * A lógica de redirecionamento é tratada no middleware para evitar
+ * problemas com a Performance API do Next.js/Turbopack
+ */
+export default function CompleteProfileLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getCurrentUser();
-
-  // Se não está autenticado, redirecionar para login
-  if (!user) {
-    redirect('/login');
-  }
-
-  // Se perfil já está completo, redirecionar para home
-  if (user.profileCompleted) {
-    redirect('/');
-  }
-
   return <>{children}</>;
 }
 

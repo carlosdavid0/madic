@@ -1,10 +1,5 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { useAuth } from "@/lib/contexts/auth-context";
-import { logoutAction } from "@/lib/actions/auth";
-import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,33 +7,48 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { User as UserIcon, Settings, LogOut, UserCircle } from "lucide-react";
+} from '@/components/ui/dropdown-menu';
+import { logoutAction } from '@/lib/actions/auth';
+import { cn } from '@/lib/utils';
+import { LogOut, Settings, UserCircle } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+type UserType = {
+  id: string;
+  name: string;
+  username: string | null;
+  email: string;
+  avatar: string | null;
+  socialName: string | null;
+  bio: string | null;
+  age: string | null;
+  locate: string | null;
+  availableFreelancer: boolean | null;
+  active: boolean | null;
+  profileCompleted: boolean | null;
+  role: string;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+} | null;
 
-export function User() {
-  const { user, loading, refreshUser } = useAuth();
+type UserProps = {
+  user: UserType | null;
+  showFullUsername?: boolean;
+};
+
+export function User({ user, showFullUsername = false }: UserProps) {
   const router = useRouter();
 
   const handleLogout = async () => {
     await logoutAction();
-    await refreshUser();
     // Disparar evento para sincronizar entre abas
-    window.dispatchEvent(new Event('auth-change'));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('auth-change'));
+    }
     router.push('/');
     router.refresh();
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center gap-2">
-        {/* Avatar skeleton */}
-        <div className="h-[35px] w-[35px] rounded-full bg-zinc-700/50 animate-pulse" />
-
-        {/* Name skeleton */}
-        <div className="h-[14px] w-[80px] rounded-md bg-zinc-700/50 animate-pulse hidden lg:block" />
-      </div>
-    );
-  }
 
   if (!user) {
     return (
@@ -70,7 +80,14 @@ export function User() {
               {user.name.charAt(0).toUpperCase()}
             </div>
           )}
-          <span className="text-md font-normal hidden lg:block">{user.name}</span>
+          <span
+            className={cn(
+              'text-md font-normal',
+              !showFullUsername && 'hidden lg:block'
+            )}
+          >
+            {user.name}
+          </span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
@@ -95,6 +112,17 @@ export function User() {
             <span>Configurações</span>
           </Link>
         </DropdownMenuItem>
+        {user.role === 'admin' && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/admin" className="cursor-pointer">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Admin</span>
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-400 focus:text-red-400">
           <LogOut className="mr-2 h-4 w-4" />

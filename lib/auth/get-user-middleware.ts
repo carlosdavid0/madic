@@ -24,6 +24,7 @@ export async function getCurrentUserFromToken(token: string) {
         id: users.id,
         active: users.active,
         profileCompleted: users.profileCompleted,
+        role: users.role,
       })
       .from(users)
       .where(eq(users.id, payload.sub))

@@ -33,6 +33,7 @@ export async function getCurrentUser() {
         availableFreelancer: users.availableFreelancer,
         active: users.active,
         profileCompleted: users.profileCompleted,
+        role: users.role,
         createdAt: users.createdAt,
         updatedAt: users.updatedAt,
       })
