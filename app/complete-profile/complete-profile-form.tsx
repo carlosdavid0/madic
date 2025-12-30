@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { updateProfileAction } from '@/lib/actions/profile';
 import { useAuth } from '@/lib/contexts/auth-context';
+import { AvatarUpload } from '@/components/profile/avatar-upload';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -25,7 +26,9 @@ const profileSchema = z.object({
 
 type User = {
   id: string;
+  name: string;
   username: string | null;
+  avatar: string | null;
   bio: string | null;
   age: string | null;
   locate: string | null;
@@ -35,11 +38,14 @@ interface CompleteProfileFormProps {
   user: User;
 }
 
-export function CompleteProfileForm({ user }: CompleteProfileFormProps) {
+export function CompleteProfileForm({ user: initialUser }: CompleteProfileFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { refreshUser } = useAuth();
+  const { refreshUser, user: contextUser } = useAuth();
+  
+  // Usar usuário do contexto se disponível, senão usar o inicial
+  const user = contextUser || initialUser;
 
   const { register, handleSubmit, formState: { errors }, watch } = useForm({
     resolver: zodResolver(profileSchema),
@@ -98,6 +104,10 @@ export function CompleteProfileForm({ user }: CompleteProfileFormProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="w-full max-w-lg mx-auto space-y-6 bg-zinc-900/50 border border-zinc-800 rounded-lg p-6"
     >
+      <div className="flex flex-col items-center pb-4 border-b border-zinc-800">
+        <AvatarUpload currentAvatar={user.avatar} userName={user.name} />
+      </div>
+
       <div className="space-y-2">
         <Label htmlFor="username" className="text-sm font-medium text-zinc-200">
           Username <span className="text-red-400">*</span>
