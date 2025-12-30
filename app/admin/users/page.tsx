@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
+import { ensureSignedAvatarUrl } from '@/lib/s3';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -39,11 +40,33 @@ async function getUsers(search?: string, role?: string, active?: string) {
       filteredUsers = filteredUsers.filter((user) => user.active === isActive);
     }
 
-    return filteredUsers.sort(
+    const sortedUsers = filteredUsers.sort(
       (a, b) =>
         new Date(b.createdAt || 0).getTime() -
         new Date(a.createdAt || 0).getTime()
     );
+
+    // Gerar URLs assinadas para avatares
+    const usersWithSignedAvatars = await Promise.all(
+      sortedUsers.map(async (user) => {
+        if (user.avatar) {
+          try {
+            const signedAvatarUrl = await ensureSignedAvatarUrl(user.avatar);
+            return { ...user, avatar: signedAvatarUrl };
+          } catch (error) {
+            console.error(
+              `[getUsers] Erro ao garantir URL assinada do avatar para usuário ${user.id}:`,
+              error
+            );
+            // Continuar com URL original em caso de erro
+            return user;
+          }
+        }
+        return user;
+      })
+    );
+
+    return usersWithSignedAvatars;
   } catch (error) {
     console.error('Erro ao buscar usuários:', error);
     return [];
