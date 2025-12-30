@@ -3,6 +3,7 @@ import { users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { verifyToken } from './jwt';
+import { ensureSignedAvatarUrl } from '@/lib/s3';
 
 export async function getCurrentUser() {
   try {
@@ -43,6 +44,16 @@ export async function getCurrentUser() {
 
     if (!user || !user.active) {
       return null;
+    }
+
+    // Garantir que o avatar tenha URL assinada se existir
+    if (user.avatar) {
+      try {
+        user.avatar = await ensureSignedAvatarUrl(user.avatar);
+      } catch (error) {
+        console.error('[getCurrentUser] Erro ao garantir URL assinada do avatar:', error);
+        // Continuar mesmo se houver erro
+      }
     }
 
     return user;

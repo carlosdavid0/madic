@@ -7,6 +7,7 @@ import { eq } from 'drizzle-orm';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import { ensureSignedAvatarUrl } from '@/lib/s3';
 
 async function getUserByUsername(username: string) {
   try {
@@ -47,6 +48,16 @@ async function getUserByUsername(username: string) {
       .from(userSocial)
       .innerJoin(socialMedias, eq(userSocial.socialId, socialMedias.id))
       .where(eq(userSocial.userId, user.id));
+
+    // Garantir que o avatar tenha URL assinada se existir
+    if (user.avatar) {
+      try {
+        user.avatar = await ensureSignedAvatarUrl(user.avatar);
+      } catch (error) {
+        console.error('[getUserByUsername] Erro ao garantir URL assinada do avatar:', error);
+        // Continuar mesmo se houver erro
+      }
+    }
 
     return {
       ...user,
