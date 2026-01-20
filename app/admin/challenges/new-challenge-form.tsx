@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { addFilesToChallenge, createChallenge } from '@/lib/actions/challenges';
 import { cn } from '@/lib/utils';
 import { Calendar, FileIcon, FileText, Image as ImageIcon, Loader2, Sparkles, Trophy, Upload, X } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -281,13 +282,15 @@ export function NewChallengeForm() {
                         className="flex items-center gap-3 p-3 border border-white/10 rounded-xl bg-white/5 hover:border-white/20 transition-colors group relative"
                       >
                         {file.preview ? (
-                          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-white/10">
-                              <img
-                                src={file.preview}
-                                alt={file.name}
-                                className="w-full h-full object-cover"
-                              />
-                          </div>
+                      <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-white/10 relative">
+                          <Image
+                            src={file.preview}
+                            alt={file.name}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                      </div>
                         ) : (
                           <div className="w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg shrink-0">
                             <FileIcon className="w-5 h-5 text-muted-foreground" />
@@ -433,10 +436,12 @@ export function NewChallengeForm() {
                   </div>
               ) : (
                 <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 group">
-                    <img
-                      src={thumbnail.preview}
+                    <Image
+                      src={thumbnail.preview || ''}
                       alt="Thumbnail preview"
-                      className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      fill
+                      className="object-cover transition-transform group-hover:scale-105"
+                      unoptimized
                     />
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <Button

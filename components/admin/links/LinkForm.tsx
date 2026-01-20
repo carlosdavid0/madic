@@ -14,8 +14,8 @@ import { z } from 'zod';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  url: z.string().url('Invalid URL'),
-  active: z.boolean().default(true),
+  url: z.url('Invalid URL'),
+  active: z.boolean(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
