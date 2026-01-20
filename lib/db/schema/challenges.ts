@@ -1,13 +1,14 @@
 import { relations } from 'drizzle-orm';
 import {
-    index,
-    integer,
-    pgTable,
-    text,
-    timestamp,
-    uniqueIndex,
-    uuid,
-    varchar,
+  foreignKey,
+  index,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+  varchar
 } from 'drizzle-orm/pg-core';
 import { files } from './file';
 import { users } from './users';
@@ -145,15 +146,18 @@ export const challengeSubmissionFiles = pgTable(
   'challenge_submission_files',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    submissionId: uuid('submission_id')
-      .notNull()
-      .references(() => challengeSubmissions.id, { onDelete: 'cascade' }),
+    submissionId: uuid('submission_id').notNull(),
     fileId: uuid('file_id')
       .notNull()
       .references(() => files.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at').defaultNow(),
   },
   (table) => [
+    foreignKey({
+      name: 'challenge_sub_files_submission_fk',
+      columns: [table.submissionId],
+      foreignColumns: [challengeSubmissions.id],
+    }).onDelete('cascade'),
     index('challenge_submission_files_submission_idx').on(table.submissionId),
     index('challenge_submission_files_file_idx').on(table.fileId),
   ]

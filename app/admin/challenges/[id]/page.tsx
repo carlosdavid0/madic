@@ -1,17 +1,17 @@
-import { db } from '@/lib/db';
-import { challenges, challengeUsers } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Edit, Trash2 } from 'lucide-react';
-import { deleteChallenge } from '@/lib/actions/challenges';
-import { ChallengeParticipants } from './challenge-participants';
-import { ChallengeFiles } from './challenge-files';
-import { ensureSignedFileUrl } from '@/lib/s3';
 import { AdminBreadcrumb } from '@/components/admin/admin-breadcrumb';
 import { AdminPageHeader } from '@/components/admin/admin-page-header';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { deleteChallenge } from '@/lib/actions/challenges';
+import { db } from '@/lib/db';
+import { challenges } from '@/lib/db/schema';
+import { ensureSignedFileUrl } from '@/lib/s3';
+import { eq } from 'drizzle-orm';
+import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { ChallengeFiles } from './challenge-files';
+import { ChallengeParticipants } from './challenge-participants';
 
 export default async function ChallengePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -59,26 +59,38 @@ export default async function ChallengePage({ params }: { params: Promise<{ id: 
         ]}
       />
 
+      <div className="flex justify-between items-center">
+        <div className="mb-4">
+          <Button variant="outline" asChild>
+            <Link href="/admin/challenges">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar para os desafios
+            </Link>
+          </Button>
+        </div>
+        <div className="flex gap-2 justify-end">
+          <Button  asChild>
+            <Link href={`/admin/challenges/${id}/edit`}>
+              <Edit className="w-4 h-4 mr-2" />
+              Editar
+            </Link>
+          </Button>
+          <form action={async () => {
+            'use server';
+            await deleteChallenge(id);
+          }}>
+            <Button type="submit" variant="destructive">
+              <Trash2 className="w-4 h-4 mr-2" />
+              Deletar
+            </Button>
+          </form>
+        </div>
+      </div>
       <AdminPageHeader
         title={challenge.name}
         description={challenge.description || undefined}
-        actions={
-          <div className="flex gap-2">
-            <Button variant="outline" asChild>
-              <Link href={`/admin/challenges/${id}/edit`}>
-                <Edit className="w-4 h-4 mr-2" />
-                Editar
-              </Link>
-            </Button>
-            <form action={deleteChallenge.bind(null, id)}>
-              <Button type="submit" variant="destructive">
-                <Trash2 className="w-4 h-4 mr-2" />
-                Deletar
-              </Button>
-            </form>
-          </div>
-        }
       />
+
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <Card className="hover:shadow-md transition-shadow">

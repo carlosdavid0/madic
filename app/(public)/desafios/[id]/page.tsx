@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Countdown } from "@/components/ui/countdown";
 import { db } from "@/lib/db";
 import { challenges } from "@/lib/db/schema";
 import { ensureSignedFileUrl } from "@/lib/s3";
@@ -140,6 +141,49 @@ export default async function DesafioDetalhePage({ params }: { params: Promise<{
 
               {/* Coluna Lateral: Informações */}
               <div className="space-y-6">
+                {/* Countdown para Início da Participação */}
+                {challenge.participationStartDate && new Date(challenge.participationStartDate) > new Date() && (
+                  <div className="p-6 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-xl border-2 border-primary/20">
+                    <div className="text-center mb-4">
+                      <h3 className="text-lg font-bold text-foreground mb-2">⏰ Início em</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(challenge.participationStartDate).toLocaleDateString('pt-BR', { 
+                          day: '2-digit', 
+                          month: 'long',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                    <div className="mt-4">
+                      <Countdown targetDate={challenge.participationStartDate} />
+                    </div>
+                  </div>
+                )}
+
+                {/* Countdown para Fim da Participação */}
+                {challenge.participationEndDate && new Date(challenge.participationEndDate) > new Date() && 
+                 challenge.participationStartDate && new Date(challenge.participationStartDate) <= new Date() && (
+                  <div className="p-6 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent rounded-xl border-2 border-orange-500/20">
+                    <div className="text-center mb-4">
+                      <h3 className="text-lg font-bold text-foreground mb-2">⏳ Termina em</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(challenge.participationEndDate).toLocaleDateString('pt-BR', { 
+                          day: '2-digit', 
+                          month: 'long',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                    <div className="mt-4">
+                      <Countdown targetDate={challenge.participationEndDate} />
+                    </div>
+                  </div>
+                )}
+
                 {/* Datas do Desafio */}
                 {(challenge.participationStartDate || challenge.votingStartDate) && (
                   <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
@@ -184,26 +228,6 @@ export default async function DesafioDetalhePage({ params }: { params: Promise<{
                     )}
                   </div>
                 )}
-
-                {/* Estatísticas */}
-                <div className="space-y-3 p-4 bg-muted/50 rounded-lg">
-                  <h3 className="font-semibold text-foreground">📊 Estatísticas</h3>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Criado em</span>
-                      <span className="font-medium">{new Date(challenge.createdAt!).toLocaleDateString('pt-BR')}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Participantes</span>
-                      <span className="font-medium">{challenge.participants?.length || 0}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Arquivos</span>
-                      <span className="font-medium">{filesWithSignedUrls.length}</span>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Botão Participar */}
                 <div>
                   <Button asChild size="lg" className="w-full">
