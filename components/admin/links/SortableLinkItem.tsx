@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/refs */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { ExternalLink, GripVertical, Pencil, Trash2 } from 'lucide-react';

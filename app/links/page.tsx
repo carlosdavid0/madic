@@ -39,6 +39,16 @@ export default async function LinksPage() {
           <LinkList links={links} />
       </div>
 
+      <div className="flex justify-center w-full mt-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+        <Image
+          src="/patrocinios.png"
+          alt="Patrocínios"
+          width={400}
+          height={80}
+          className="h-auto w-auto max-w-[80%] opacity-90"
+        />
+      </div>
+
         <div className="mt-8 text-center text-white/30 text-sm animate-in fade-in duration-1000 delay-500">
           © {new Date().getFullYear()} Madic. Todos os direitos reservados.
         </div>
