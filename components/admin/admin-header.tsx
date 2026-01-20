@@ -1,19 +1,19 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Bell, Menu, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Menu, Bell, User } from 'lucide-react';
 import { useState } from 'react';
 import { AdminMobileNav } from './admin-mobile-nav';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 interface AdminHeaderProps {
   user: {
@@ -28,7 +28,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="fixed top-0 left-0 right-0 z-50 h-16 border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
         <div className="h-full px-4 flex items-center justify-between gap-4">
           {/* Logo & Menu Mobile */}
           <div className="flex items-center gap-4">

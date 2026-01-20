@@ -115,7 +115,8 @@ body {
     width: 100%;
     min-height: 100vh;
     background: #000000;
-    background-image: radial-gradient(
+    background-image:
+      radial-gradient(
         circle at center,
         rgba(239, 199, 60, 0.1) 0%,
         rgba(27, 27, 27, 0.95) 60%
@@ -144,51 +145,21 @@ body {
     background-attachment: fixed;
   }
 
-  @media (max-width: 768px) {
-    .bg-magic {
-      background: #1a1a1a;
-      background: radial-gradient(
-        circle at 50% 50%,
-        rgba(80, 70, 40, 0.6) 0%,
-        rgba(50, 40, 30, 0.4) 30%,
-        rgba(30, 25, 20, 0.3) 50%,
-        rgba(20, 20, 20, 1) 70%,
-        rgba(15, 15, 15, 1) 100%
-          linear-gradient(
-            135deg,
-            rgba(20, 30, 25, 0.5) 0%,
-            transparent 50%,
-            rgba(60, 20, 20, 0.664) 100%
-          )
-      );
-    }
-  }
-
-  @media (max-width: 480px) {
-    .bg-magic {
-      background: #1a1a1a;
-      background: radial-gradient(
-          circle at 50% 50%,
-          rgba(80, 70, 40, 0.6) 0%,
-          rgba(50, 40, 30, 0.4) 30%,
-          rgba(30, 25, 20, 0.3) 50%,
-          rgba(20, 20, 20, 1) 70%,
-          rgba(15, 15, 15, 1) 100%
-        ),
-        linear-gradient(
-          135deg,
-          rgba(20, 30, 25, 0.5) 0%,
-          transparent 50%,
-          rgba(60, 20, 20, 0.4) 100%
-        );
-    }
-  }
-
   @media (min-width: 769px) and (max-width: 1024px) {
     .bg-magic {
       background-size: cover;
       background-position: center center;
     }
+  }
+
+  @keyframes shine {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shine {
+    animation: shine 1.5s infinite;
   }
 }
 
