@@ -35,7 +35,9 @@ export default async function LinksPage() {
           </p>
         </div>
 
-        <LinkList links={links} />
+      <div className='flex-1 mt-5'>
+          <LinkList links={links} />
+      </div>
 
         <div className="mt-8 text-center text-white/30 text-sm animate-in fade-in duration-1000 delay-500">
           © {new Date().getFullYear()} Madic. Todos os direitos reservados.

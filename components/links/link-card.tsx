@@ -17,7 +17,7 @@ interface LinkCardProps {
 
 const getIcon = (url: string) => {
   return (
-    <SocialIcon    
+    <SocialIcon
       bgColor='transparent'
       url={url}
       as="div"
