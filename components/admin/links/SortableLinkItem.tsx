@@ -1,6 +1,6 @@
 'use client';
 
-import { GripVertical, Pencil, Trash2 } from 'lucide-react';
+import { ExternalLink, GripVertical, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
@@ -94,15 +94,9 @@ export function SortableLinkItem({ link, index, moveLink, onToggleActive, onDele
     }),
     end: (item, monitor) => {
         if (monitor.didDrop()) {
-            // It dropped somewhere handled? 
-            // Actually we just want to save whenever the drag ends successfully or effectively.
-            // Since we reorder in hover, we should save on end.
              onDragEnd();
         } else {
-             // If dropped outside, should we reset? Ideally yes, but for now let's just save or ignore.
-             // If we saved state in parent on hover (we did via setLinks), then the UI is already updated.
-             // So we must persist it.
-             onDragEnd(); // Simplest approach: save whatever the current state is on drop.
+             onDragEnd(); 
         }
     }
   });
@@ -115,43 +109,64 @@ export function SortableLinkItem({ link, index, moveLink, onToggleActive, onDele
       style={{ opacity: isDragging ? 0.5 : 1 }}
       data-handler-id={handlerId}
       className={clsx(
-        "flex items-center gap-4 p-4 mb-3 bg-card border rounded-lg shadow-sm transition-colors",
-        !link.active && "opacity-60 bg-muted/50"
+        "group flex items-center gap-4 p-4 mb-3 rounded-xl border transition-all duration-300",
+        link.active 
+            ? "bg-white/5 border-white/10 hover:border-primary/30 hover:shadow-[0_0_15px_rgba(239,199,60,0.1)]" 
+            : "bg-white/[0.02] border-white/5 opacity-70 hover:opacity-100"
       )}
     >
-      <div className="cursor-move text-muted-foreground hover:text-foreground">
+      <div className="cursor-move text-muted-foreground/50 group-hover:text-primary transition-colors p-1 rounded hover:bg-white/5">
         <GripVertical size={20} />
       </div>
       
       <div className="flex-1 min-w-0">
-        <h3 className="font-medium truncate">{link.name}</h3>
-        <p className="text-sm text-muted-foreground truncate">{link.url}</p>
+        <h3 className={clsx(
+            "font-medium truncate transition-colors",
+            link.active ? "text-foreground" : "text-muted-foreground",
+            "group-hover:text-primary"
+        )}>
+            {link.name}
+        </h3>
+        <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground/60 truncate hover:text-primary/80 transition-colors flex items-center gap-1">
+            {link.url}
+            <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-50" />
+        </a>
       </div>
 
-      <div className="flex items-center gap-2">
-        <Switch
-          checked={link.active}
-          onCheckedChange={(checked) => onToggleActive(link.id, checked)}
-        />
+      <div className="flex items-center gap-2 lg:gap-4">
+        <div className="flex items-center gap-2">
+            <span className={clsx("text-xs font-medium uppercase tracking-wider", link.active ? "text-primary" : "text-muted-foreground")}>
+                {link.active ? 'Ativo' : 'Inativo'}
+            </span>
+            <Switch
+            checked={link.active}
+            onCheckedChange={(checked) => onToggleActive(link.id, checked)}
+            className="data-[state=checked]:bg-primary"
+            />
+        </div>
+
+        <div className="w-px h-8 bg-white/10 mx-1 hidden lg:block" />
         
-        <Button variant="ghost" size="icon" asChild>
-          <Link href={`/admin/links/${link.id}`}>
-            <Pencil size={18} />
-          </Link>
-        </Button>
-        
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
-          onClick={() => {
-            if (confirm('Are you sure you want to delete this link?')) {
-              onDelete(link.id);
-            }
-          }}
-        >
-          <Trash2 size={18} />
-        </Button>
+        <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" asChild className="hover:bg-primary/10 hover:text-primary h-8 w-8">
+            <Link href={`/admin/links/${link.id}`}>
+                <Pencil size={16} />
+            </Link>
+            </Button>
+            
+            <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 w-8"
+            onClick={() => {
+                if (confirm('Tem certeza que deseja excluir este link?')) {
+                onDelete(link.id);
+                }
+            }}
+            >
+            <Trash2 size={16} />
+            </Button>
+        </div>
       </div>
     </div>
   );

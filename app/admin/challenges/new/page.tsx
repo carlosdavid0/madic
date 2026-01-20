@@ -1,12 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trophy } from 'lucide-react';
-import { NewChallengeForm } from '../new-challenge-form';
 import { AdminBreadcrumb } from '@/components/admin/admin-breadcrumb';
-import { AdminPageHeader } from '@/components/admin/admin-page-header';
+import { NewChallengeForm } from '../new-challenge-form';
 
 export default function NewChallengePage() {
   return (
-    <div>
+    <div className="space-y-6">
       <AdminBreadcrumb
         items={[
           { label: 'Desafios', href: '/admin/challenges' },
@@ -14,29 +11,14 @@ export default function NewChallengePage() {
         ]}
       />
 
-      <AdminPageHeader
-        title="Criar Novo Desafio"
-        description="Preencha as informações abaixo para criar um novo desafio"
-      />
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold tracking-tight">Criar Novo Desafio</h1>
+        <p className="text-muted-foreground">
+          Preencha as informações abaixo para lançar um novo desafio para a comunidade.
+        </p>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-yellow-50 dark:bg-yellow-950/20">
-              <Trophy className="w-5 h-5 text-yellow-600" />
-            </div>
-            <div>
-              <CardTitle>Informações do Desafio</CardTitle>
-              <CardDescription className="mt-1">
-                Os arquivos serão enviados após a criação do desafio
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <NewChallengeForm />
-        </CardContent>
-      </Card>
+      <NewChallengeForm />
     </div>
   );
 }

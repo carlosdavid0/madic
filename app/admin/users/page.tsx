@@ -1,11 +1,10 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { ensureSignedAvatarUrl } from '@/lib/s3';
-import { ArrowLeft } from 'lucide-react';
-import Image from 'next/image';
+import { ArrowLeft, CheckCircle, Filter, Search, Shield, User, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { UserActions } from './user-actions';
@@ -58,7 +57,6 @@ async function getUsers(search?: string, role?: string, active?: string) {
               `[getUsers] Erro ao garantir URL assinada do avatar para usuário ${user.id}:`,
               error
             );
-            // Continuar com URL original em caso de erro
             return user;
           }
         }
@@ -98,233 +96,162 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 lg:py-12">
-        {/* Header */}
-        <div className="mb-8 lg:mb-12">
-          <div className="mb-6">
-            <Link href="/" className="inline-block mb-4">
-              <Image
-                src="/logo-amarela.png"
-                alt="Logo"
-                width={180}
-                height={180}
-                className="h-12 w-auto object-contain"
-              />
-            </Link>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h1 className="text-3xl lg:text-4xl font-bold mb-2">
-                  Gerenciar Usuários
-                </h1>
-                <p className="text-muted-foreground text-lg">
-                  Gerencie todos os usuários do sistema
-                </p>
-              </div>
-              <Button size="sm" asChild>
-                <Link href="/admin">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Voltar
-                </Link>
-              </Button>
-            </div>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Gerenciar Usuários</h1>
+            <p className="text-muted-foreground mt-1">
+                Gerencie permissões, status e detalhes de todos os usuários.
+            </p>
           </div>
-          <div className="h-px bg-border" />
-        </div>
+          <Button variant="outline" size="sm" asChild className="border-white/10 hover:bg-white/5">
+            <Link href="/admin">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Voltar
+            </Link>
+          </Button>
+      </div>
 
-        {/* Estatísticas */}
-        <div className="grid gap-4 md:grid-cols-5 mb-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">Total</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.total}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">Ativos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">
-                {stats.active}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">Inativos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-600">
-                {stats.inactive}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">Admins</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-blue-600">
-                {stats.admins}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">Usuários</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.users}</div>
-            </CardContent>
-          </Card>
-        </div>
+      {/* Estatísticas */}
+      <div className="grid gap-4 md:grid-cols-5">
+        <StatsCard title="Total" value={stats.total} icon={User} delay={0} />
+        <StatsCard title="Ativos" value={stats.active} icon={CheckCircle} color="text-green-500" delay={100} />
+        <StatsCard title="Inativos" value={stats.inactive} icon={XCircle} color="text-red-500" delay={200} />
+        <StatsCard title="Admins" value={stats.admins} icon={Shield} color="text-blue-500" delay={300} />
+        <StatsCard title="Usuários" value={stats.users} icon={User} color="text-yellow-500" delay={400} />
+      </div>
 
-        {/* Filtros e Busca */}
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <form method="get" className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-3">
-                <div>
-                  <label
-                    htmlFor="search"
-                    className="text-sm font-medium mb-2 block"
-                  >
-                    Buscar
-                  </label>
-                  <Input
-                    id="search"
-                    name="search"
-                    placeholder="Nome, email ou username..."
-                    defaultValue={search}
-                  />
+      {/* Filtros e Busca */}
+      <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 backdrop-blur-sm">
+          <form method="get" className="flex flex-col md:flex-row gap-4 items-end">
+             <div className="flex-1 w-full relative">
+                <label htmlFor="search" className="text-xs font-medium mb-1.5 block text-muted-foreground">Buscar</label>
+                <div className="relative">
+                    <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
+                    <Input
+                        id="search"
+                        name="search"
+                        placeholder="Nome, email ou username..."
+                        defaultValue={search}
+                        className="pl-9 bg-white/5 border-white/10 focus-visible:ring-primary/20"
+                    />
                 </div>
-                <div>
-                  <label
-                    htmlFor="role"
-                    className="text-sm font-medium mb-2 block"
-                  >
-                    Role
-                  </label>
-                  <select
-                    id="role"
-                    name="role"
-                    defaultValue={role}
-                    className="flex h-14 w-full rounded-lg border border-input bg-input/30 px-4 py-3 text-sm text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                  >
-                    <option value="all">Todos</option>
-                    <option value="admin">Admin</option>
-                    <option value="user">Usuário</option>
-                  </select>
+             </div>
+             <div className="w-full md:w-48">
+                <label htmlFor="role" className="text-xs font-medium mb-1.5 block text-muted-foreground">Role</label>
+                <div className="relative">
+                     <Filter className="absolute left-3 top-3 w-3.5 h-3.5 text-muted-foreground z-10" />
+                     <select
+                        id="role"
+                        name="role"
+                        defaultValue={role}
+                        className="flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 pl-9 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none"
+                    >
+                        <option value="all">Todos os cargos</option>
+                        <option value="admin">Administrador</option>
+                        <option value="user">Usuário</option>
+                    </select>
                 </div>
-                <div>
-                  <label
-                    htmlFor="active"
-                    className="text-sm font-medium mb-2 block"
-                  >
-                    Status
-                  </label>
-                  <select
-                    id="active"
-                    name="active"
-                    defaultValue={active}
-                    className="flex h-14 w-full rounded-lg border border-input bg-input/30 px-4 py-3 text-sm text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                  >
-                    <option value="all">Todos</option>
-                    <option value="true">Ativo</option>
-                    <option value="false">Inativo</option>
-                  </select>
+             </div>
+             <div className="w-full md:w-48">
+                <label htmlFor="active" className="text-xs font-medium mb-1.5 block text-muted-foreground">Status</label>
+                <div className="relative">
+                     <Filter className="absolute left-3 top-3 w-3.5 h-3.5 text-muted-foreground z-10" />
+                     <select
+                        id="active"
+                        name="active"
+                        defaultValue={active}
+                        className="flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 pl-9 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none"
+                    >
+                        <option value="all">Todos os status</option>
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
                 </div>
-              </div>
-              <div className="flex gap-2">
-                <Button type="submit">Filtrar</Button>
+             </div>
+             <div className="flex gap-2">
+                <Button type="submit" size="sm">Filtrar</Button>
                 <Link href="/admin/users">
-                  <Button type="button" variant="secondary">
+                  <Button type="button" variant="ghost" size="sm" className="hover:bg-white/5">
                     Limpar
                   </Button>
                 </Link>
+             </div>
+          </form>
+      </div>
+
+      {/* Lista de Usuários */}
+      <Card className="border-white/5 bg-white/[0.02] backdrop-blur-sm overflow-hidden">
+        <CardContent className="p-0">
+          <Suspense fallback={<div className="p-8 text-center text-muted-foreground">Carregando...</div>}>
+            {usersList.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+                <Search className="w-12 h-12 opacity-20 mb-4" />
+                <p>Nenhum usuário encontrado com os filtros atuais</p>
               </div>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Lista de Usuários */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Usuários ({usersList.length})</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Suspense fallback={<div>Carregando...</div>}>
-              {usersList.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  Nenhum usuário encontrado
+            ) : (
+              <>
+                {/* Desktop: Tabela */}
+                <div className="hidden lg:block overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-white/5 bg-white/[0.02]">
+                        <th className="text-left py-4 px-6 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Usuário</th>
+                        <th className="text-left py-4 px-6 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Email</th>
+                        <th className="text-left py-4 px-6 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Role</th>
+                        <th className="text-left py-4 px-6 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
+                        <th className="text-left py-4 px-6 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Data</th>
+                        <th className="text-right py-4 px-6 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                      {usersList.map((user) => (
+                        <UserTableRow key={user.id} user={user} />
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              ) : (
-                <>
-                  {/* Desktop: Tabela */}
-                  <div className="hidden lg:block overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                            Usuário
-                          </th>
-                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                            Email
-                          </th>
-                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                            Role
-                          </th>
-                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                            Status
-                          </th>
-                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                            Criado em
-                          </th>
-                          <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">
-                            Ações
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {usersList.map((user) => (
-                          <UserTableRow key={user.id} user={user} />
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
 
-                  {/* Mobile: Cards */}
-                  <div className="lg:hidden space-y-4">
-                    {usersList.map((user) => (
-                      <UserCard key={user.id} user={user} />
-                    ))}
-                  </div>
-                </>
-              )}
-            </Suspense>
-          </CardContent>
-        </Card>
-
-        {/* Footer Info */}
-        <div className="mt-12 pt-8 border-t">
-          <p className="text-sm text-muted-foreground text-center">
-            Painel administrativo • Acesso restrito
-          </p>
-        </div>
+                {/* Mobile: Cards */}
+                <div className="lg:hidden grid gap-4 p-4">
+                  {usersList.map((user) => (
+                    <UserCard key={user.id} user={user} />
+                  ))}
+                </div>
+              </>
+            )}
+          </Suspense>
+        </CardContent>
+      </Card>
+      
+      <div className="text-center text-xs text-muted-foreground/40 pt-4">
+        Mostrando {usersList.length} usuários
       </div>
     </div>
   );
 }
 
+function StatsCard({ title, value, icon: Icon, color = "text-muted-foreground", delay }: { title: string, value: number, icon: any, color?: string, delay: number }) {
+    return (
+        <div 
+            className="group p-5 rounded-2xl border border-white/5 bg-gradient-to-br from-white/5 to-transparent backdrop-blur-sm hover:scale-[1.02] transition-all duration-300"
+        >
+            <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-medium text-muted-foreground">{title}</p>
+                <Icon className={`w-4 h-4 ${color} opacity-70 group-hover:opacity-100 transition-opacity`} />
+            </div>
+            <div className="text-2xl font-bold">{value}</div>
+        </div>
+    )
+}
+
 function UserTableRow({ user }: { user: typeof users.$inferSelect }) {
   return (
-    <tr className="border-b hover:bg-muted/50 transition-colors">
-      <td className="py-4 px-4">
+    <tr className="group hover:bg-white/[0.02] transition-colors">
+      <td className="py-4 px-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center overflow-hidden shrink-0">
+          <div className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center overflow-hidden shrink-0 border border-white/10 group-hover:border-primary/20 transition-colors">
             {user.avatar ? (
               <img
                 src={user.avatar}
@@ -332,68 +259,60 @@ function UserTableRow({ user }: { user: typeof users.$inferSelect }) {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-sm font-semibold">
+              <span className="text-xs font-bold text-muted-foreground">
                 {user.name?.charAt(0).toUpperCase() || 'U'}
               </span>
             )}
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <p className="font-medium truncate">{user.name}</p>
-              {!user.profileCompleted && (
-                <span className="px-1.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded shrink-0">
-                  Incompleto
-                </span>
-              )}
+              <p className="font-medium truncate text-sm group-hover:text-primary transition-colors">{user.name}</p>
             </div>
             {user.username && (
-              <p className="text-sm text-muted-foreground truncate">
+              <p className="text-xs text-muted-foreground/60 truncate">
                 @{user.username}
               </p>
             )}
           </div>
         </div>
       </td>
-      <td className="py-4 px-4">
-        <p className="text-sm truncate max-w-xs">{user.email}</p>
-        {user.emailValidated && (
-          <span className="text-xs text-green-600">✓ Validado</span>
-        )}
+      <td className="py-4 px-6">
+        <p className="text-sm truncate max-w-[200px] text-muted-foreground">{user.email}</p>
       </td>
-      <td className="py-4 px-4">
+      <td className="py-4 px-6">
         <span
-          className={`px-2 py-1 text-xs font-medium rounded ${
+          className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${
             user.role === 'admin'
-              ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-              : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
+              ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+              : 'bg-white/5 text-muted-foreground border-white/10'
           }`}
         >
           {user.role === 'admin' ? 'Admin' : 'Usuário'}
         </span>
       </td>
-      <td className="py-4 px-4">
-        <span
-          className={`px-2 py-1 text-xs font-medium rounded ${
-            user.active
-              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-              : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-          }`}
-        >
-          {user.active ? 'Ativo' : 'Inativo'}
-        </span>
+      <td className="py-4 px-6">
+        <div className="flex items-center gap-1.5">
+            <div className={`w-1.5 h-1.5 rounded-full ${user.active ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'bg-red-500'}`} />
+            <span className={`text-xs ${user.active ? 'text-green-400' : 'text-red-400'}`}>
+                {user.active ? 'Ativo' : 'Inativo'}
+            </span>
+        </div>
+        {!user.profileCompleted && (
+            <span className="text-[10px] text-yellow-500/80 mt-1 block">Perfil incompleto</span>
+        )}
       </td>
-      <td className="py-4 px-4">
+      <td className="py-4 px-6">
         <p className="text-sm text-muted-foreground">
           {user.createdAt
             ? new Date(user.createdAt).toLocaleDateString('pt-BR', {
                 day: '2-digit',
                 month: '2-digit',
-                year: 'numeric',
+                year: '2-digit',
               })
-            : 'N/A'}
+            : '-'}
         </p>
       </td>
-      <td className="py-4 px-4">
+      <td className="py-4 px-6">
         <div className="flex justify-end">
           <UserActions user={user} />
         </div>
@@ -404,11 +323,10 @@ function UserTableRow({ user }: { user: typeof users.$inferSelect }) {
 
 function UserCard({ user }: { user: typeof users.$inferSelect }) {
   return (
-    <Card>
-      <CardContent className="pt-6">
+    <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 transition-all hover:bg-white/[0.04]">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4 flex-1">
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center overflow-hidden">
+            <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center overflow-hidden border border-white/10">
               {user.avatar ? (
                 <img
                   src={user.avatar}
@@ -416,55 +334,40 @@ function UserCard({ user }: { user: typeof users.$inferSelect }) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <span className="text-lg font-semibold">
+                <span className="text-sm font-semibold text-muted-foreground">
                   {user.name?.charAt(0).toUpperCase() || 'U'}
                 </span>
               )}
             </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold">{user.name}</h3>
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <h3 className="font-semibold text-sm">{user.name}</h3>
                 {user.role === 'admin' && (
-                  <span className="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded">
+                  <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded">
                     Admin
                   </span>
                 )}
-                {!user.active && (
-                  <span className="px-2 py-0.5 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded">
-                    Inativo
-                  </span>
-                )}
-                {!user.profileCompleted && (
-                  <span className="px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded">
-                    Perfil Incompleto
-                  </span>
-                )}
               </div>
-              <p className="text-sm text-muted-foreground mb-1">
+              <p className="text-xs text-muted-foreground truncate mb-2">
                 {user.email}
               </p>
-              {user.username && (
-                <p className="text-sm text-muted-foreground">
-                  @{user.username}
-                </p>
-              )}
-              <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
-                <span>
-                  Criado em:{' '}
-                  {user.createdAt
-                    ? new Date(user.createdAt).toLocaleDateString('pt-BR')
-                    : 'N/A'}
-                </span>
-                {user.emailValidated && (
-                  <span className="text-green-600">Email validado</span>
-                )}
+              
+              <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground/60">
+                 <div className="flex items-center gap-1.5">
+                    <div className={`w-1.5 h-1.5 rounded-full ${user.active ? 'bg-green-500' : 'bg-red-500'}`} />
+                    <span>{user.active ? 'Ativo' : 'Inativo'}</span>
+                 </div>
+                 <div>
+                    {user.createdAt
+                     ? new Date(user.createdAt).toLocaleDateString('pt-BR')
+                     : '-'}
+                 </div>
               </div>
             </div>
           </div>
           <UserActions user={user} />
         </div>
-      </CardContent>
-    </Card>
+    </div>
   );
 }
 
