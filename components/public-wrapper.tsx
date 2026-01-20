@@ -5,9 +5,11 @@ import { Footer } from './footer';
 // Pode renderizar Client Components filhos (como Header) sem problemas
 export function PublicWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <main className="">
+    <main className="min-h-screen flex flex-col">
       <Header />
-      {children}
+      <div className="flex-1 justify-center">
+        {children}
+      </div>
       <Footer />
     </main>
   );
